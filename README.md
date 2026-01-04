@@ -1,4 +1,4 @@
-# numpydoc-docstring: VSCode NumPy-doc Docstring Generator
+# numpydoc-python: VSCode NumPy-doc Style Docstring Generator
 
 Visual Studio Code extension to quickly generate `numpydoc`-style docstrings for Python functions.
 
@@ -75,7 +75,7 @@ Install the `.vsix` file in VSCode:
 
 - Open Command panel (`Ctrl+Shift+P` or `Cmd+Shift+P`)
 - Select `Extensions: Install from VSIX...`
-- Choose the `numpydoc-docstring-[version].vsix` file
+- Choose the `numpydoc-python-[version].vsix` file
 
 Verify its installed in the `Extensions` tabs by searching for `NumPy-doc`.
 
