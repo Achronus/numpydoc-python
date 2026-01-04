@@ -1,5 +1,5 @@
 {
-    "name": "numpydoc-docstring",
+    "name": "numpydoc-python",
     "displayName": "NumPy-doc - Python Docstring Generator",
     "description": "Generates NumPy-doc style Python docstrings automatically.",
     "version": "1.0.0",
