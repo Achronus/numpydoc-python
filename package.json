@@ -1,0 +1,158 @@
+{
+    "name": "numpydoc-docstring",
+    "displayName": "NumPy-doc - Python Docstring Generator",
+    "description": "Generates NumPy-doc style Python docstrings automatically.",
+    "version": "1.0.0",
+    "publisher": "Achronus",
+    "license": "SEE LICENSE IN LICENSE",
+    "icon": "images/icon.png",
+    "extensionKind": [
+        "workspace"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Achronus/numpydoc-python"
+    },
+    "bugs": {
+        "url": "https://github.com/Achronus/numpydoc-python/issues"
+    },
+    "categories": [
+        "Formatters",
+        "Programming Languages"
+    ],
+    "keywords": [
+        "python",
+        "docstring",
+        "numpydoc",
+        "numpy",
+        "documentation",
+        "generator"
+    ],
+    "galleryBanner": {},
+    "engines": {
+        "vscode": "^1.53.0"
+    },
+    "activationEvents": [
+        "onLanguage:python"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "numpydoc.generateDocstring",
+                "title": "Generate NumPy-doc Docstring"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "numpydoc.generateDocstring",
+                "key": "ctrl+shift+2",
+                "mac": "cmd+shift+2",
+                "when": "editorTextFocus"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "when": "resourceLangId == python",
+                    "command": "numpydoc.generateDocstring",
+                    "group": "1_modification"
+                }
+            ]
+        },
+        "configuration": {
+            "type": "object",
+            "title": "NumPy-doc - Python Docstring Generator",
+            "properties": {
+                "numpydoc.customTemplatePath": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Path to custom docstring template. Path can be absolute or relative to the project root. Leave empty to use built-in template."
+                },
+                "numpydoc.generateDocstringOnEnter": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Generate docstring on pressing enter after opening a docstring"
+                },
+                "numpydoc.includeExtendedSummary": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include extended summary section"
+                },
+                "numpydoc.includeName": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Include function name at the start of docstring"
+                },
+                "numpydoc.startOnNewLine": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Start docstring on new line"
+                },
+                "numpydoc.guessTypes": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Infer parameter and return types from type hints and default values"
+                },
+                "numpydoc.quoteStyle": {
+                    "type": "string",
+                    "default": "\"\"\"",
+                    "enum": [
+                        "\"\"\"",
+                        "'''"
+                    ],
+                    "description": "Quote style for docstrings"
+                },
+                "numpydoc.logLevel": {
+                    "type": "string",
+                    "default": "Info",
+                    "enum": [
+                        "None",
+                        "Info",
+                        "Debug"
+                    ],
+                    "scope": "window",
+                    "description": "Log level for debugging"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "lint": "eslint -c .eslintrc.js --ext .ts src/",
+        "copy_templates": "copyfiles --up 1 \"src/docstring/templates/numpydoc.mustache\" out/",
+        "copy_python_test_files": "copyfiles --up 1 \"src/test/integration/python_test_files/*\" out/",
+        "compile": "npm run copy_templates && tsc -p ./",
+        "watch": "npm run copy_templates && tsc -watch -p ./",
+        "unit_test": "mocha -r ts-node/register \"src/test/**/*.spec.ts\"",
+        "prepare_integration_tests": "npm run copy_python_test_files && npm run compile",
+        "integration_test": "node out/test/run_integration_tests.js"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.3.0",
+        "@types/glob": "^7.2.0",
+        "@types/mocha": "^9.1.0",
+        "@types/mustache": "^4.1.2",
+        "@types/node": "^17.0.17",
+        "@types/vscode": "^1.53.0",
+        "@typescript-eslint/eslint-plugin": "^5.12.0",
+        "@typescript-eslint/parser": "^5.12.0",
+        "@vscode/test-electron": "^2.1.2",
+        "chai": "^4.3.6",
+        "copyfiles": "^2.4.1",
+        "eslint": "^8.9.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-jsdoc": "^46.4.4",
+        "eslint-plugin-prefer-arrow": "^1.2.3",
+        "mocha": "^9.2.0",
+        "ts-node": "^10.5.0",
+        "typescript": "^4.5.5"
+    },
+    "dependencies": {
+        "@types/stack-trace": "^0.0.29",
+        "mustache": "^4.2.0",
+        "stack-trace": "^0.0.10",
+        "ts-dedent": "^2.2.0"
+    }
+}

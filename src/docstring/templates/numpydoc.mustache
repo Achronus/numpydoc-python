@@ -1,0 +1,34 @@
+{{summaryPlaceholder}}
+
+{{#parametersExist}}
+Parameters
+----------
+{{#args}}
+{{var}} : {{typePlaceholder}}{{#default}} (optional){{/default}}
+    {{descriptionPlaceholder}}{{#default}}. Default is `{{&default}}`{{/default}}{{^default}}
+{{/default}}
+{{/args}}
+{{#kwargs}}
+{{var}} : {{typePlaceholder}}{{#default}} (optional){{/default}}
+    {{descriptionPlaceholder}}{{#default}}. Default is `{{&default}}`{{/default}}{{^default}}
+.{{/default}}
+{{/kwargs}}
+{{/parametersExist}}
+
+{{#returnsExist}}
+Returns
+-------
+{{#returns}}
+_name_ : {{typePlaceholder}}
+    {{descriptionPlaceholder}}
+{{/returns}}
+{{/returnsExist}}
+{{#exceptionsExist}}
+
+Raises
+------
+{{#exceptions}}
+_name_ : {{typePlaceholder}}
+    {{descriptionPlaceholder}}
+{{/exceptions}}
+{{/exceptionsExist}}
