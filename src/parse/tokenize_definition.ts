@@ -1,4 +1,10 @@
 export function tokenizeDefinition(functionDefinition: string): string[] {
+    // Check if this is a simple class definition without parentheses (e.g., "class MyClass:")
+    const simpleClassPattern = /^class\s+\w+\s*:\s*(?:#.*)?$/;
+    if (simpleClassPattern.test(functionDefinition)) {
+        return [];
+    }
+
     const definitionPattern =
         /(?:def|class)\s+\w+\s*\(([\s\S]*)\)\s*(->\s*(["']?)[\w\[\], |\.]*\3)?:\s*(?:#.*)?$/;
 

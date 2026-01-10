@@ -13,16 +13,83 @@ export function parseParameters(
     parameterTokens: string[],
     body: string[],
     functionName: string,
+    isClass: boolean = false,
 ): DocstringParts {
     return {
         name: functionName,
         decorators: parseDecorators(parameterTokens),
         args: parseArguments(parameterTokens),
         kwargs: parseKeywordArguments(parameterTokens),
-        returns: parseReturn(parameterTokens, body),
-        yields: parseYields(parameterTokens, body),
-        exceptions: parseExceptions(body),
+        returns: isClass ? [] : parseReturn(parameterTokens, body),
+        yields: isClass ? undefined : parseYields(parameterTokens, body),
+        exceptions: isClass ? [] : parseExceptions(body),
     };
+}
+
+export interface DataclassAttributeResult {
+    args: Argument[];
+    kwargs: KeywordArgument[];
+}
+
+/**
+ * Parse dataclass attributes from the class body.
+ * Dataclass attributes are type-annotated class variables like:
+ *   field_name: type           -> becomes an arg (required)
+ *   field_name: type = default -> becomes a kwarg (optional)
+ */
+export function parseDataclassAttributes(body: string[]): DataclassAttributeResult {
+    const args: Argument[] = [];
+    const kwargs: KeywordArgument[] = [];
+    // Match patterns like:
+    // name: str
+    // name: int = 0
+    // name: Optional[str] = None
+    // name: List[int] = field(default_factory=list)
+    const attributePattern = /^(\w+)\s*:\s*([^=]+?)(?:\s*=\s*(.+))?$/;
+
+    for (const line of body) {
+        const trimmedLine = line.trim();
+
+        // Skip method definitions, decorators, and non-attribute lines
+        if (trimmedLine.startsWith("def ") || 
+            trimmedLine.startsWith("@") || 
+            trimmedLine.startsWith("class ") ||
+            trimmedLine.startsWith("#")) {
+            continue;
+        }
+
+        const match = trimmedLine.match(attributePattern);
+
+        if (match == null) {
+            continue;
+        }
+
+        const varName = match[1];
+        const varType = match[2].trim();
+        const defaultValue = match[3]?.trim();
+
+        // Skip private/internal attributes and ClassVar
+        if (varName.startsWith("_") || varType.startsWith("ClassVar")) {
+            continue;
+        }
+
+        if (defaultValue !== undefined) {
+            // Has default value -> kwarg
+            kwargs.push({
+                var: varName,
+                type: varType,
+                default: defaultValue,
+            });
+        } else {
+            // No default value -> arg
+            args.push({
+                var: varName,
+                type: varType,
+            });
+        }
+    }
+
+    return { args, kwargs };
 }
 
 function parseDecorators(parameters: string[]): Decorator[] {

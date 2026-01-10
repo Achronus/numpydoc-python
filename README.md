@@ -1,6 +1,6 @@
 # numpydoc-python: VSCode NumPy-doc Style Docstring Generator
 
-Visual Studio Code extension to quickly generate `numpydoc`-style docstrings for Python functions.
+Visual Studio Code extension to quickly generate `numpydoc`-style docstrings for Python functions and classes.
 
 ```python
 def example(ex1: float, ex2: int | None = None) -> Tuple[float, dict[str, str]]:
@@ -29,11 +29,34 @@ def example(ex1: float, ex2: int | None = None) -> Tuple[float, dict[str, str]]:
     raise ValueError()
 ```
 
+**Dataclass Support:** Also works with dataclasses (including `@dataclass`, `@struct.dataclass`, `@pydantic.dataclasses.dataclass`, etc.):
+
+```python
+@struct.dataclass
+class Person:
+    """
+    _summary_
+
+    Parameters
+    ----------
+    name : str
+        _description_
+    age : int
+        _description_
+    email : str (optional)
+        _description_. Default is `""`
+    """
+    name: str
+    age: int
+    email: str = ""
+```
+
 ## Features
 
 - Quickly generate a NumPy-formatted docstring snippet that can be tabbed through.
 - Infers parameter types through pep484 type hints, default values, and variable names.
 - Support for args, kwargs, decorators, errors, and parameter types.
+- **Support for classes and dataclasses** (including `@dataclass`, `@struct.dataclass`, etc.).
 - Automatic tuple unpacking for return types.
 - Automatic removal of `| None` type hints when default value is `None`.
 - Support for custom docstring templates via configuration.
@@ -97,7 +120,7 @@ This extension supports custom templates via the `numpydoc.customTemplatePath` c
 ### Variables
 
 ```text
-{{name}}                        - name of the function
+{{name}}                        - name of the function or class
 {{summaryPlaceholder}}          - _summary_ placeholder
 {{outputTitle}}                 - "Returns" or "Yields" depending on output type
 ```
@@ -105,13 +128,13 @@ This extension supports custom templates via the `numpydoc.customTemplatePath` c
 ### Sections
 
 ```text
-{{#args}}                       - iterate over function arguments
+{{#args}}                       - iterate over function arguments or dataclass attributes (without defaults)
     {{var}}                     - variable name
-    {{typePlaceholder}}         - _type_ or guessed type  placeholder
+    {{typePlaceholder}}         - _type_ or guessed type placeholder
     {{descriptionPlaceholder}}  - _description_ placeholder
 {{/args}}
 
-{{#kwargs}}                     - iterate over function kwargs
+{{#kwargs}}                     - iterate over function kwargs or dataclass attributes (with defaults)
     {{var}}                     - variable name
     {{typePlaceholder}}         - _type_ or guessed type placeholder
     {{&default}}                - default value (& unescapes the variable)

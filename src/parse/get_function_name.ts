@@ -1,5 +1,6 @@
 export function getFunctionName(functionDefinition: string): string {
-    const pattern = /(?:def|class)\s+(\w+)\s*\(/;
+    // Handle both "class Name:" and "class Name(...):" and "def name(...):"
+    const pattern = /(?:def|class)\s+(\w+)\s*[:(]/;
 
     const match = pattern.exec(functionDefinition);
 

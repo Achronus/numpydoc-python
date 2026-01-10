@@ -75,7 +75,10 @@ export class DocstringFactory {
     }
 
     private condenseNewLines(snippet: string): string {
-        return snippet.replace(/\n{3,}/gm, "\n\n");
+        // Normalize multiple blank lines (which may contain whitespace) to exactly one blank line
+        // Matches a newline followed by one or more (optional whitespace + newline)
+        snippet = snippet.replace(/\n(\s*\n)+/g, "\n\n");
+        return snippet;
     }
 
     private condenseTrailingNewLines(snippet: string): string {
