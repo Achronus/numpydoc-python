@@ -99,7 +99,7 @@ This extension supports custom templates via the `numpydoc.customTemplatePath` c
 ```text
 {{name}}                        - name of the function
 {{summaryPlaceholder}}          - _summary_ placeholder
-{{extendedSummaryPlaceholder}}  - [extended_summary] placeholder
+{{outputTitle}}                 - "Returns" or "Yields" depending on output type
 ```
 
 ### Sections
@@ -123,15 +123,10 @@ This extension supports custom templates via the `numpydoc.customTemplatePath` c
     {{descriptionPlaceholder}}  - _description_ placeholder
 {{/exceptions}}
 
-{{#yields}}                     - iterate over yields
+{{#output}}                     - iterate over output (returns or yields)
     {{typePlaceholder}}         - _type_ placeholder
     {{descriptionPlaceholder}}  - _description_ placeholder
-{{/yields}}
-
-{{#returns}}                    - iterate over returns
-    {{typePlaceholder}}         - _type_ placeholder
-    {{descriptionPlaceholder}}  - _description_ placeholder
-{{/returns}}
+{{/output}}
 ```
 
 ### Additional Sections
@@ -149,11 +144,8 @@ This extension supports custom templates via the `numpydoc.customTemplatePath` c
 {{#exceptionsExist}}    - display contents if exceptions exist
 {{/exceptionsExist}}
 
-{{#yieldsExist}}        - display contents if returns exist
-{{/yieldsExist}}
-
-{{#returnsExist}}       - display contents if returns exist
-{{/returnsExist}}
+{{#outputExists}}       - display contents if returns or yields exist
+{{/outputExists}}
 
 {{#placeholder}}        - makes contents a placeholder
 {{/placeholder}}

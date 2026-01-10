@@ -6,7 +6,7 @@ export interface DocstringParts {
     args: Argument[];
     kwargs: KeywordArgument[];
     exceptions: Exception[];
-    returns: Returns[] | undefined;
+    returns: Returns[];
     yields: Yields;
 }
 

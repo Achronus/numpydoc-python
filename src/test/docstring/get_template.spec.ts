@@ -9,7 +9,7 @@ describe("getDefaultTemplate()", () => {
             const result = getDefaultTemplate();
 
             expect(result).to.contain("Parameters");
-            expect(result).to.contain("Returns");
+            expect(result).to.contain("{{outputTitle}}");
         });
     });
 });

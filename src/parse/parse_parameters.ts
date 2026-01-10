@@ -86,12 +86,12 @@ function parseKeywordArguments(parameters: string[]): KeywordArgument[] {
     return kwargs;
 }
 
-function parseReturn(parameters: string[], body: string[]): Returns[] | undefined {
+function parseReturn(parameters: string[], body: string[]): Returns[] {
     const returnType = parseReturnFromDefinition(parameters);
 
     if (returnType == null || isIterator(returnType.type)) {
         const bodyReturn = parseFromBody(body, /return /);
-        return bodyReturn ? [bodyReturn] : undefined;
+        return bodyReturn ? [bodyReturn] : [];
     }
 
     return [returnType];

@@ -16,8 +16,9 @@ export class TemplateData {
     public args: Argument[];
     public kwargs: KeywordArgument[];
     public exceptions: Exception[];
-    public returns: Returns[] | undefined;
+    public returns: Returns[];
     public yields: Yields;
+    public output: Returns[];
 
     private includeName: boolean;
 
@@ -33,6 +34,7 @@ export class TemplateData {
         this.exceptions = docstringParts.exceptions;
         this.returns = this.transformReturns(docstringParts.returns);
         this.yields = docstringParts.yields;
+        this.output = this.yields ? [{ type: this.yields.type }] : this.returns;
 
         this.includeName = includeName;
 
@@ -85,11 +87,19 @@ export class TemplateData {
     }
 
     public returnsExist(): boolean {
-        return this.returns !== undefined && this.returns.length > 0;
+        return this.returns.length > 0;
     }
 
     public yieldsExist(): boolean {
         return this.yields != undefined;
+    }
+
+    public outputExists(): boolean {
+        return this.returnsExist() || this.yieldsExist();
+    }
+
+    public outputTitle(): string {
+        return this.yieldsExist() ? "Yields" : "Returns";
     }
 
     private cleanKwargTypes(kwargs: KeywordArgument[]): KeywordArgument[] {
@@ -102,9 +112,9 @@ export class TemplateData {
         });
     }
 
-    private transformReturns(docReturns: Returns[] | undefined): Returns[] | undefined {
-        if (docReturns === undefined || docReturns.length === 0) {
-            return undefined;
+    private transformReturns(docReturns: Returns[]): Returns[] {
+        if (docReturns.length === 0) {
+            return [];
         }
 
         // If single-item array with Tuple type, split it
@@ -133,9 +143,7 @@ export class TemplateData {
         let current = "";
         const stack: string[] = [];
 
-        for (let i = 0; i < text.length; i++) {
-            const ch = text[i];
-
+        for (const ch of text) {
             if ((ch === '"' || ch === "'") && stack[stack.length - 1] !== ch) {
                 stack.push(ch);
                 current += ch;
@@ -215,7 +223,7 @@ export class TemplateData {
         }
 
         const returns = this.returns;
-        if (returns !== undefined && returns.length > 0) {
+        if (returns.length > 0) {
             for (const r of returns) {
                 if (r.type === undefined) {
                     r.type = placeholder;

@@ -120,21 +120,21 @@ describe("parseParameters()", () => {
             const parameterTokens = ["-> None"];
             const result = parseParameters(parameterTokens, [], "name");
 
-            expect(result.returns).to.deep.equal(undefined);
+            expect(result.returns).to.deep.equal([]);
         });
 
         it("should not parse '-> Generator' return types", () => {
             const parameterTokens = ["-> Generator[int]"];
             const result = parseParameters(parameterTokens, [], "name");
 
-            expect(result.returns).to.deep.equal(undefined);
+            expect(result.returns).to.deep.equal([]);
         });
 
         it("should not parse '-> Iterator' return types", () => {
             const parameterTokens = ["-> Iterator[int]"];
             const result = parseParameters(parameterTokens, [], "name");
 
-            expect(result.returns).to.deep.equal(undefined);
+            expect(result.returns).to.deep.equal([]);
         });
     });
 
@@ -191,7 +191,7 @@ describe("parseParameters()", () => {
     it("should result in no yield if there is no yield type or yield in body", () => {
         const result = parseParameters([], [], "name");
 
-        expect(result.returns).to.eql(undefined);
+        expect(result.yields).to.eql(undefined);
     });
 
     it("should parse the return from the body if there is no return type in the definition", () => {
@@ -209,7 +209,7 @@ describe("parseParameters()", () => {
     it("should result in no return if there is no return type or return in body", () => {
         const result = parseParameters([], [], "name");
 
-        expect(result.returns).to.eql(undefined);
+        expect(result.returns).to.eql([]);
     });
 
     it("should parse simple exception", () => {
