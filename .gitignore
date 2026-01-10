@@ -6,4 +6,4 @@ test_*
 .vscode-test/
 .vscode/tags
 .vscode/settings.json
-numpydoc-docstring-*.vsix
+numpydoc-python-*.vsix

@@ -34,7 +34,7 @@ export class TemplateData {
         this.exceptions = docstringParts.exceptions;
         this.returns = this.transformReturns(docstringParts.returns);
         this.yields = docstringParts.yields;
-        this.output = this.yields ? [{ type: this.yields.type }] : this.returns;
+        this.output = this.yields ? this.transformYields(this.yields) : this.returns;
 
         this.includeName = includeName;
 
@@ -117,25 +117,48 @@ export class TemplateData {
             return [];
         }
 
-        // If single-item array with Tuple type, split it
         if (docReturns.length === 1) {
             const t = docReturns[0].type;
             if (t === undefined) {
                 return docReturns;
             }
-
-            const tupleMatch = t.match(/^\s*(?:Tuple|tuple)\s*\[(.*)\]\s*$/);
-            if (!tupleMatch) {
-                return docReturns;
-            }
-
-            const inner = tupleMatch[1];
-            const parts = this.splitTopLevel(inner, ",");
-
-            return parts.map((p) => ({ type: p.trim() }));
+            return this.expandTupleType(t);
         }
 
         return docReturns;
+    }
+
+    private transformYields(yields: Yields): Returns[] {
+        if (yields.type === undefined) {
+            return [{ type: undefined }];
+        }
+
+        // Extract inner type from Generator[X, Y, Z] or Iterator[X]
+        const generatorMatch = yields.type.match(/^\s*(?:Generator|Iterator)\s*\[(.*)\]\s*$/);
+        if (!generatorMatch) {
+            // If not a Generator/Iterator, just return as-is
+            return this.expandTupleType(yields.type);
+        }
+
+        // For Generator[X, Y, Z], we want just X (the yield type)
+        // For Iterator[X], we want X
+        const inner = generatorMatch[1];
+        const parts = this.splitTopLevel(inner, ",");
+        const yieldType = parts[0].trim();
+
+        return this.expandTupleType(yieldType);
+    }
+
+    private expandTupleType(type: string): Returns[] {
+        const tupleMatch = type.match(/^\s*(?:Tuple|tuple)\s*\[(.*)\]\s*$/);
+        if (!tupleMatch) {
+            return [{ type }];
+        }
+
+        const inner = tupleMatch[1];
+        const parts = this.splitTopLevel(inner, ",");
+
+        return parts.map((p) => ({ type: p.trim() }));
     }
 
     private splitTopLevel(text: string, sep: string): string[] {
@@ -144,6 +167,7 @@ export class TemplateData {
         const stack: string[] = [];
 
         for (const ch of text) {
+            // Handle quotes (they toggle on/off)
             if ((ch === '"' || ch === "'") && stack[stack.length - 1] !== ch) {
                 stack.push(ch);
                 current += ch;
@@ -156,24 +180,28 @@ export class TemplateData {
                 continue;
             }
 
-            if (stack.length > 0) {
-                current += ch;
-                continue;
-            }
-
+            // Handle opening brackets - push to stack
             if (ch === "[" || ch === "(" || ch === "{") {
                 stack.push(ch);
                 current += ch;
                 continue;
             }
 
+            // Handle closing brackets - pop from stack
             if (ch === "]" || ch === ")" || ch === "}") {
                 stack.pop();
                 current += ch;
                 continue;
             }
 
-            if (ch === sep && stack.length === 0) {
+            // If inside brackets/quotes, just accumulate
+            if (stack.length > 0) {
+                current += ch;
+                continue;
+            }
+
+            // At top level: check for separator
+            if (ch === sep) {
                 parts.push(current);
                 current = "";
                 continue;
