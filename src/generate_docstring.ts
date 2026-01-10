@@ -50,7 +50,6 @@ export class NumpydocDocstring {
             this.getTemplate(),
             config.get("quoteStyle").toString(),
             config.get("startOnNewLine") === true,
-            config.get("includeExtendedSummary") === true,
             config.get("includeName") === true,
             config.get("guessTypes") === true,
         );

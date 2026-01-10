@@ -12,7 +12,6 @@ export class DocstringFactory {
     private quoteStyle: string;
 
     private startOnNewLine: boolean;
-    private includeDescription: boolean;
     private includeName: boolean;
     private guessTypes: boolean;
 
@@ -20,7 +19,6 @@ export class DocstringFactory {
         template: string,
         quoteStyle = '"""',
         startOnNewLine = false,
-        includeDescription = true,
         includeName = false,
         guessTypes = true,
     ) {
@@ -29,7 +27,6 @@ export class DocstringFactory {
         this.startOnNewLine = startOnNewLine;
         this.guessTypes = guessTypes;
         this.includeName = includeName;
-        this.includeDescription = includeDescription;
 
         this.template = template;
     }
@@ -39,7 +36,6 @@ export class DocstringFactory {
             docstringParts,
             this.guessTypes,
             this.includeName,
-            this.includeDescription,
         );
 
         let docstring = render(this.template, templateData);
@@ -64,8 +60,6 @@ export class DocstringFactory {
             ${this.guessTypes}
         includeName:
             ${this.includeName}
-        includeDescription:
-            ${this.includeDescription}
         template:
         ${this.template}
         `;

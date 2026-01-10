@@ -157,7 +157,6 @@ describe("DocstringFactory", () => {
                     undefined,
                     undefined,
                     undefined,
-                    undefined,
                     false,
                 );
 
@@ -193,30 +192,6 @@ describe("DocstringFactory", () => {
             });
         });
 
-        context("when the extendedSummaryPlaceholder is used in the template", () => {
-            const template = "Doc\n\n{{extendedSummaryPlaceholder}}\n\nHello";
-
-            context("and includeExtendedSummary is set to true", () => {
-                it("should add the extended_summary placeholder to the snippet", () => {
-                    const factory = new DocstringFactory(template, undefined, undefined, true);
-
-                    const result = factory.generateDocstring(defaultDocstringComponents);
-
-                    expect(result).to.equal('"""Doc\n\n${1:_extended_summary_}\n\nHello"""');
-                });
-            });
-
-            context("and includeExtendedSummary is set to false", () => {
-                it("should not add the extended_summary placeholder to the snippet", () => {
-                    const factory = new DocstringFactory(template, undefined, undefined, false);
-
-                    const result = factory.generateDocstring(defaultDocstringComponents);
-
-                    expect(result).to.equal('"""Doc\n\nHello"""');
-                });
-            });
-        });
-
         context("when the argsExist tag is used", () => {
             const template = "\n{{summaryPlaceholder}}";
 
@@ -226,7 +201,6 @@ describe("DocstringFactory", () => {
                     docstringComponents.name = "Function";
                     const factory = new DocstringFactory(
                         template,
-                        undefined,
                         undefined,
                         undefined,
                         true,
@@ -244,7 +218,6 @@ describe("DocstringFactory", () => {
                     docstringComponents.name = "Function";
                     const factory = new DocstringFactory(
                         template,
-                        undefined,
                         undefined,
                         undefined,
                         false,
@@ -430,7 +403,7 @@ describe("DocstringFactory", () => {
             context("and there are no returns", () => {
                 it("should not include the content inside the tag", () => {
                     const docstringComponents = defaultDocstringComponents;
-                    docstringComponents.returns = undefined;
+                    docstringComponents.returns = [];
                     const factory = new DocstringFactory(template);
 
                     const result = factory.generateDocstring(docstringComponents);

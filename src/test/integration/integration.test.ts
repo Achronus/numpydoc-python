@@ -92,7 +92,6 @@ describe("Basic Integration Tests", function () {
         before(async function () {
             const settings = vsc.workspace.getConfiguration(settingsIdentifier);
             await Promise.all([
-                settings.update("includeExtendedSummary", false, true),
                 settings.update("guessTypes", true, true),
                 settings.update("quoteStyle", '"""', true),
             ]);

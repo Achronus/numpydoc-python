@@ -20,13 +20,11 @@ export class TemplateData {
     public yields: Yields;
 
     private includeName: boolean;
-    private includeExtendedSummary: boolean;
 
     constructor(
         docstringParts: DocstringParts,
         guessTypes: boolean,
         includeName: boolean,
-        includeExtendedSummary: boolean,
     ) {
         this.name = docstringParts.name;
         this.decorators = docstringParts.decorators;
@@ -37,7 +35,6 @@ export class TemplateData {
         this.yields = docstringParts.yields;
 
         this.includeName = includeName;
-        this.includeExtendedSummary = includeExtendedSummary;
 
         if (!guessTypes) {
             this.removeTypes();
@@ -58,14 +55,6 @@ export class TemplateData {
         }
 
         return "${@@@:_summary_}";
-    }
-
-    public extendedSummaryPlaceholder(): string {
-        if (this.includeExtendedSummary) {
-            return "${@@@:_extended_summary_}";
-        }
-
-        return "";
     }
 
     public typePlaceholder(): string {

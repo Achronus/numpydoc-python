@@ -85,7 +85,6 @@ This extension contributes the following settings:
 
 - `numpydoc.customTemplatePath`: Path to a custom docstring template (absolute or relative to the project root)
 - `numpydoc.generateDocstringOnEnter`: Generate the docstring on pressing enter after opening docstring
-- `numpydoc.includeExtendedSummary`: Include extended summary section in docstring
 - `numpydoc.includeName`: Include function name at the start of docstring
 - `numpydoc.startOnNewLine`: New line before summary placeholder
 - `numpydoc.guessTypes`: Infer types from type hints, default values and variable names

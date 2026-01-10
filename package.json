@@ -74,11 +74,6 @@
                     "default": true,
                     "description": "Generate docstring on pressing enter after opening a docstring"
                 },
-                "numpydoc.includeExtendedSummary": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "Include extended summary section"
-                },
                 "numpydoc.includeName": {
                     "type": "boolean",
                     "default": false,
