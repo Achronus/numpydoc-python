@@ -54,6 +54,28 @@ describe("getBody()", () => {
 
         expect(result2).to.have.deep.members([]);
     });
+
+    it("should not include content from subsequent dataclasses", () => {
+        // Position 3 is the first line after "class Person:" (name: str)
+        const result = getBody(dataclassBody, 3);
+
+        expect(result).to.have.deep.members(["name: str", "age: int"]);
+        expect(result).to.not.include("company_name: str");
+    });
+
+    it("should include methods within a class but stop at next class", () => {
+        // Position 3 is the first line after "class Person:" (name: str)
+        const result = getBody(dataclassBodyWithMethods, 3);
+
+        expect(result).to.have.deep.members(["name: str", "def greet(self):", "pass"]);
+    });
+
+    it("should return empty for a class with no body followed by another class", () => {
+        // Position 3 is right after "class Empty:"
+        const result = getBody(emptyDataclassFollowedByAnother, 3);
+
+        expect(result).to.have.deep.members([]);
+    });
 });
 
 const basicFunction = `
@@ -123,4 +145,37 @@ def no_body():
 
 def next_no_body():
 
+`;
+
+const dataclassBody = `
+@dataclass
+class Person:
+    name: str
+    age: int
+
+@dataclass
+class Company:
+    company_name: str
+`;
+
+const dataclassBodyWithMethods = `
+@dataclass
+class Person:
+    name: str
+
+    def greet(self):
+        pass
+
+@dataclass
+class Company:
+    name: str
+`;
+
+const emptyDataclassFollowedByAnother = `
+@dataclass
+class Empty:
+
+@dataclass
+class HasContent:
+    name: str
 `;
